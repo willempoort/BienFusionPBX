@@ -59,13 +59,13 @@ echo "remove PCMU codec and change us_ring to fr_ring"
 sed -i 's/PCMU\,//g' /etc/freeswitch/vars.xml
 sed -i 's/$${us-ring}/$${fr-ring}/g' /etc/freeswitch/vars.xml
 
-# vervang <!-- <param name="core-db-dsn" value="$${dsn}" /> -->
+# replace <!-- <param name="core-db-dsn" value="$${dsn}" /> -->
 # voor <param name="core-db-dsn" value="$${dsn}" />
 echo "change the xml files to use postgresql"
 echo "	switch.conf.xml"
 sed -i 's/<\!--\s*<param name="core-db-dsn" value="$${dsn}"\s*\/>\s*-->/<param name="core-db-dsn" value="$${dsn}" \/>/'  /etc/freeswitch/autoload_configs/switch.conf.xml
 
-# vervang <!-- <param name="odbc-dsn" value="$${dsn}"/> -->
+# replace <!-- <param name="odbc-dsn" value="$${dsn}"/> -->
 # in db.conf.xml, directory.conf.xml, fifo.conf.xml & voicemail.conf.xml
 echo "	db.conf.xml"
 sed -i 's/<\!--\s*<param name="odbc-dsn" value="$${dsn}"\s*\/>\s*-->/<param name="odbc-dsn" value="$${dsn}" \/>/'  /etc/freeswitch/autoload_configs/db.conf.xml
@@ -78,7 +78,7 @@ sed -i 's/<\!--\s*<param name="odbc-dsn" value="$${dsn}"\s*\/>\s*-->/<param name
 echo "	callcenter.conf.xml"
 sed -i 's/<\!--\s*<param name="odbc-dsn" value="$${dsn}"\s*\/>\s*-->/<param name="odbc-dsn" value="$${dsn}" \/>/'  /etc/freeswitch/autoload_configs/callcenter.conf
 
-# activeer blf functies in /etc/freeswitch/autoload_configs/lua.conf.xml
+# activate blf functions in /etc/freeswitch/autoload_configs/lua.conf.xml
 echo "activate blf for call_flow, dnd and forward"
 sed -i 's/<\!--\s*<param name="startup-script" value="call_flow_monitor.lua"\s*\/>\s*-->/<param name="startup-script" value="call_flow_monitor.lua"\/>/'  /etc/freeswitch/autoload_configs/lua.conf.xml
 sed -i 's/<\!--\s*<param name="startup-script" value="blf_subscribe.lua flow"\s*\/>\s*-->/<param name="startup-script" value="blf_subscribe.lua flow"\/>/'  /etc/freeswitch/autoload_configs/lua.conf.xml
