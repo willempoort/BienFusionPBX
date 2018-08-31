@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# In this version we asume you have copied fusionpbx.pgsql into /tmp yourself if you want it
+
 # FusionPbx Bien install script with Bien defaults
 # add local nl_NL.UTF8
 echo "generate locales for nl-NL"
