@@ -1,6 +1,12 @@
 #!/bin/bash
+# To install Bien Template database; call script with template argument
+# ./bieninstall template
 
-# In this version we asume you have copied fusionpbx.pgsql into /tmp yourself if you want it
+if [ "$1" != "" ]; then
+    param=$1
+else
+    param=""
+fi
 
 # FusionPbx Bien install script with Bien defaults
 # add local nl_NL.UTF8
@@ -86,23 +92,25 @@ sed -i 's/<\!--\s*<param name="startup-script" value="blf_subscribe.lua forward"
 # pg_dump -Fc fusionpbx > fusionpbx.pgsql
 # exit
 
-# restore in new setup
-# to restore copy the fusionpbx.pgsql file to new server
-# in /tmp and make readable for all
-if [ -e /tmp/fusionpbx.pgsql ]
+if [$param = "template"]
 then
-    echo "template database file /tmp/fusionpbx.pgsql found"
-    chmod +r /tmp/fusionpbx.pgsql
-    cd /tmp
-    echo "restore the database"
-    su -c "pg_restore --clean -d fusionpbx /tmp/fusionpbx.pgsql" -s /bin/sh postgres
-    # upgrade the sql schema if database was from ealier release
-    # no harm in doing it so so it anyway
-    echo "execute a database schema upgrade; just in case"
-    cd /var/www/fusionpbx
-    /usr/bin/php /var/www/fusionpbx/core/upgrade/upgrade.php
+   # Copy fusionpbx.pgsql into /tmp
+   # restore in new setup
+   # to restore copy the fusionpbx.pgsql file to new server
+   # in /tmp and make readable for all
+   echo "get fusionpbx.pgsql from github"
+   cd /tmp
+   wget https://github.com/willempoort/BienFusionPBX/blob/master/fusionpbx.pgsql
+   chmod +r /tmp/fusionpbx.pgsql
+   echo "restore the database"
+   su -c "pg_restore --clean -d fusionpbx /tmp/fusionpbx.pgsql" -s /bin/sh postgres
+   # upgrade the sql schema if database was from ealier release
+   # no harm in doing it so so it anyway
+   echo "execute a database schema upgrade; just in case"
+   cd /var/www/fusionpbx
+   /usr/bin/php /var/www/fusionpbx/core/upgrade/upgrade.php
 else
-    echo "no template database found to restore"
+   echo "not restoring Bien template database"
 fi
 
 # part to delete freeswitch .db files
@@ -125,7 +133,7 @@ echo ""
 echo ""
 echo ""
 echo ""
-if [ -e /tmp/fusionpbx.pgsql ]
+if [$param = "template"]
 then
 	echo "login with admin@10.11.12.50"
 	echo "use password clviXHEaacGf1Mee"
@@ -135,7 +143,4 @@ else
 	echo "in the fusionpbx gui you can now setup fusionpbx"
 	echo "for the postgresql connection use user fusionpbx with password $db_password" 
 fi
-# login with admin@<imported domain>
-# ***** NB Admin password from 10.11.12.50 database copy
-# admin password clviXHEaacGf1Mee
 
